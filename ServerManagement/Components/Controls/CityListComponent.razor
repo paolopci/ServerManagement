@@ -4,7 +4,7 @@
         <div class="row w-50">
             @foreach (var city in cities)
             {
-                <CityComponent city="@city" selectedCity="@selectedCity"></CityComponent>
+                <CityComponent city="@city" selectedCity="@selectedCity" SelectCityCallback="HandleCitySelection"></CityComponent>
             }
         </div>
     </div>
@@ -18,8 +18,11 @@
 
     public  string selectedCity="Toronto";
 
-    // private void SelectCity(string cityName)
-    // {
-    //     selectedCity = cityName;
-    // }
+    private void HandleCitySelection(string cityName)
+    {
+        selectedCity = cityName;
+        StateHasChanged();
+    }
+
+    
 }

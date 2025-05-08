@@ -19,12 +19,12 @@
 
     [Parameter]
     public string city { get; set; }
-    //private List<String> cities = CitiesRepository.GetCities();
 
-
+    [Parameter]
+    public EventCallback<string> SelectCityCallback { get; set; }
 
     private void SelectCity(string cityName)
     {
-        selectedCity = cityName;
+        SelectCityCallback.InvokeAsync(cityName);
     }
 }
