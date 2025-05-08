@@ -10,9 +10,9 @@
 <CityListComponent SelectCityCallback="HandleCitySelection"></CityListComponent>
 <br />
 
-
+<SearchBarComponent SearchServerCallback="HandleSearchServer"></SearchBarComponent>
 <br />
-<ServerListComponent @rendermode="InteractiveServer" CityName="@selectedCity"></ServerListComponent>
+<ServerListComponent @rendermode="InteractiveServer" CityName="@selectedCity" SearchFilter="@searchFilter" ></ServerListComponent>
 
 <p>
     <a href="/servers/add" class="btn btn-primary">Add Server</a>
@@ -21,24 +21,18 @@
 @code {
    
     private string selectedCity = "Toronto";
+    private string searchFilter = "";
 
-    // private string _serverFilter = "";
-    // private string serverFilter
-    // {
-    //     get => _serverFilter;
-    //     set
-    //     {
-    //         _serverFilter = value;
-
-    //     }
-    // }
-
-    
 
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
+        searchFilter = String.Empty;
+    }
 
+    private void HandleSearchServer(string searchFil)
+    {
+        searchFilter = searchFil;
     }
 
 }
