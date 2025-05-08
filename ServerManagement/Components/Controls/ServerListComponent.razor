@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager NavigationManager
 
-@if (servers != null)
+@if (servers != null && servers.Count >= 0)
 {
     <ul>
 
@@ -35,7 +35,7 @@
 
 
 
-    
+
     private List<Server>? servers;
 
     protected override void OnParametersSet()

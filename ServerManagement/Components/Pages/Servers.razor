@@ -32,7 +32,7 @@
     <button class="btn btn-outline-secondary" type="button" id="button-search" @onclick="HandleSearch">Search</button>
 </div>
 <br/>
-<ServerListComponent @rendermode="InteractiveServer" CityName="Halifax"></ServerListComponent>
+<ServerListComponent @rendermode="InteractiveServer" CityName="@selectedCity"></ServerListComponent>
 
 <p>
     <a href="/servers/add" class="btn btn-primary">Add Server</a>
@@ -43,7 +43,12 @@
 
     private List<String> cities = CitiesRepository.GetCities();
 
-    private string selectedCity = "Toronto";
+    private string selectedCity;
+
+    protected override void OnInitialized()
+    {
+        selectedCity = "Toronto";
+    }
 
     private string _serverFilter = "";
     private string serverFilter { 
@@ -62,9 +67,10 @@
 
     private void SelectCity(string cityName)
     {
-        this.selectedCity = cityName;
+        selectedCity = cityName;
+       // cityName = selectedCity;
 
-      //  this.servers = ServersRepository.GetServersByCity(this.selectedCity);        
+        //  this.servers = ServersRepository.GetServersByCity(this.selectedCity);        
     }
     
     private void HandleSearch()
