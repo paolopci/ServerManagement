@@ -1,28 +1,9 @@
-﻿@inject NavigationManager NavigationManager
-
-@if (servers != null && servers.Count >= 0)
+﻿@if (servers != null && servers.Count >= 0)
 {
     <ul>
 
         <Virtualize Items="this.servers" Context="server">
-            <li @key="server.ServerId">
-                @server.Name in @server.City is
-                <span style="color:@((server.IsOnline ? "green" : "red"))">
-                    @(server.IsOnline ? "online" : "offline")
-                </span>
-                &nbsp;
-                <a href="/servers/@server.ServerId" class="btn btn-link">Edit</a>
-                &nbsp;
-                @* <EditForm Model="server"
-                      FormName="@($"form-server-{server.ServerId}")"
-                      OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
-                <button type="submit" class="btn btn-primary">Delete</button>
-            </EditForm> *@
-                <EditForm Model="server" OnValidSubmit="() => DeleteServer(server.ServerId)">
-                    <button type="submit" class="btn btn-primary">Delete</button>
-                </EditForm>
-
-            </li>
+            <ServerComponent Server="server"></ServerComponent>
         </Virtualize>
     </ul>
 }
@@ -33,33 +14,11 @@
     [Parameter]
     public string? CityName { get; set; }
 
-
-
-
     private List<Server>? servers;
 
     protected override void OnParametersSet()
     {
-        servers = ServersRepository.GetServersByCity(CityName);
+        servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
     }
 
-    private void DeleteServer(int serverId)
-    {
-        if (serverId > 0)
-        {
-            ServersRepository.DeleteServer(serverId);
-            //NavigationManager.NavigateTo("/servers");
-            var toRemove = servers.FirstOrDefault(s => s.ServerId == serverId);
-            if (toRemove != null)
-            {
-                servers.Remove(toRemove);
-                // forzo il re-load ... solo per ora
-                NavigationManager.NavigateTo("/servers", true);
-
-
-                // Forzo il re-render soluzione migliore
-                //  StateHasChanged();
-            }
-        }
-    }
 }
