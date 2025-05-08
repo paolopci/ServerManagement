@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager NavigationManager
 
 <ul>
-    
+
     <Virtualize Items="this.servers" Context="server">
         <li @key="server.ServerId">
             @server.Name in @server.City is
@@ -11,26 +11,42 @@
             &nbsp;
             <a href="/servers/@server.ServerId" class="btn btn-link">Edit</a>
             &nbsp;
-            <EditForm Model="server"
+            @* <EditForm Model="server"
                       FormName="@($"form-server-{server.ServerId}")"
                       OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </EditForm> *@
+            <EditForm Model="server" OnValidSubmit="() => DeleteServer(server.ServerId)">
                 <button type="submit" class="btn btn-primary">Delete</button>
             </EditForm>
 
         </li>
     </Virtualize>
-    
+
 </ul>
 
 @code {
-    private List<Server> servers = ServersRepository.GetServersByCity("Toronto");
+    //private List<Server> servers = ServersRepository.GetServersByCity("Toronto");
+    private List<Server> servers;
+
+    protected override void OnInitialized()
+    {
+        servers = ServersRepository.GetServersByCity("Toronto");
+    }
 
     private void DeleteServer(int serverId)
-{
-    if (serverId > 0)
     {
-        ServersRepository.DeleteServer(serverId);
-        NavigationManager.NavigateTo("/servers");
+        if (serverId > 0)
+        {
+            ServersRepository.DeleteServer(serverId);
+            //NavigationManager.NavigateTo("/servers");
+            var toRemove = servers.FirstOrDefault(s => s.ServerId == serverId);
+            if (toRemove != null)
+            {
+                servers.Remove(toRemove);
+                // Forzo il re-render
+                StateHasChanged();
+            }
+        }
     }
-}
 }
