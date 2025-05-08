@@ -44,8 +44,12 @@
             if (toRemove != null)
             {
                 servers.Remove(toRemove);
-                // Forzo il re-render
-                StateHasChanged();
+                // forzo il re-load ... solo per ora
+                NavigationManager.NavigateTo("/servers",true);
+               
+                
+                // Forzo il re-render soluzione migliore 
+              //  StateHasChanged();
             }
         }
     }
