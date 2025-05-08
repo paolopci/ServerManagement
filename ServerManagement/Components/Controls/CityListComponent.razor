@@ -14,15 +14,21 @@
 
 
 @code {
-     private List<String> cities = CitiesRepository.GetCities();
 
-    public  string selectedCity="Toronto";
+
+    [Parameter]
+    public EventCallback<string> SelectCityCallback { get; set; }
+
+    private List<String> cities = CitiesRepository.GetCities();
+
+    public string selectedCity = "Toronto";
 
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
-        StateHasChanged();
+
+        SelectCityCallback.InvokeAsync(cityName);
     }
 
-    
+
 }

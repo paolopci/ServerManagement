@@ -7,7 +7,7 @@
 <h3>Servers</h3>
 <br />
 <br />
-<CityListComponent></CityListComponent>
+<CityListComponent SelectCityCallback="HandleCitySelection"></CityListComponent>
 <br />
 
 <div class="input-group mb-3">
@@ -17,15 +17,15 @@
     <button class="btn btn-outline-secondary" type="button" id="button-search" @onclick="HandleSearch">Search</button>
 </div>
 <br />
-<ServerListComponent @rendermode="InteractiveServer" CityName="Toronto"></ServerListComponent>
+<ServerListComponent @rendermode="InteractiveServer" CityName="@selectedCity"></ServerListComponent>
 
 <p>
     <a href="/servers/add" class="btn btn-primary">Add Server</a>
 </p>
 
 @code {
-
-  
+    // valore iniziale per la città selezionata
+    private string selectedCity = "Toronto";
 
     private string _serverFilter = "";
     private string serverFilter
@@ -41,6 +41,13 @@
     private void HandleSearch()
     {
       //  this.selectedCity = string.Empty;
+
+    }
+
+    private void HandleCitySelection(string cityName)
+    {
+        selectedCity = cityName;
+
     }
 
 }
