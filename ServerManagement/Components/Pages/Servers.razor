@@ -10,12 +10,7 @@
 <CityListComponent SelectCityCallback="HandleCitySelection"></CityListComponent>
 <br />
 
-<div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Search Servers"
-           @bind-value="serverFilter"
-           @bind-value:event="oninput" />
-    <button class="btn btn-outline-secondary" type="button" id="button-search" @onclick="HandleSearch">Search</button>
-</div>
+
 <br />
 <ServerListComponent @rendermode="InteractiveServer" CityName="@selectedCity"></ServerListComponent>
 
@@ -24,25 +19,21 @@
 </p>
 
 @code {
-    // valore iniziale per la città selezionata
+   
     private string selectedCity = "Toronto";
 
-    private string _serverFilter = "";
-    private string serverFilter
-    {
-        get => _serverFilter;
-        set
-        {
-            _serverFilter = value;
+    // private string _serverFilter = "";
+    // private string serverFilter
+    // {
+    //     get => _serverFilter;
+    //     set
+    //     {
+    //         _serverFilter = value;
 
-        }
-    }
+    //     }
+    // }
 
-    private void HandleSearch()
-    {
-      //  this.selectedCity = string.Empty;
-
-    }
+    
 
     private void HandleCitySelection(string cityName)
     {
