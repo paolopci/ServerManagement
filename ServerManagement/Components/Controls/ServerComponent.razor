@@ -3,7 +3,7 @@
 
 @if (Server != null)
 {
-    <li @key="Server.ServerId">
+    <li @key="Server.ServerId" style="background-color: @GetBackgroundColor()">
         @Server.Name in @Server.City is
         <span style="color:@((Server.IsOnline ? "green" : "red"))">
             @(Server.IsOnline ? "online" : "offline")
@@ -21,12 +21,12 @@
         @if (Server.IsOnline)
         {
             Random random = new Random();
-            int randomNumber = random.Next(1, 500); 
+            int randomNumber = random.Next(1, 500);
             <text>users: @randomNumber</text>
         }
         else
         {
-              <text>N/A</text>
+            <text>N/A</text>
         }
         &nbsp;
         <a href="/Servers/@Server.ServerId" class="btn btn-link">Edit</a>
@@ -41,6 +41,12 @@
 
 
 @code {
+
+    [CascadingParameter(Name = "SelectedCity")]
+    public string? SelectedCity { get; set; }
+
+
+
     [Parameter]
     public Server? Server { get; set; }
 
@@ -56,5 +62,27 @@
         }
     }
 
+
+    private string GetBackgroundColor()
+    {
+        if (SelectedCity != null)
+        {
+            switch (SelectedCity)
+            {
+                case "Toronto":
+                    return "lightblue";
+                case "Montreal":
+                    return "lightgreen";
+                case "Ottawa":
+                    return "yellow";
+                case "Calgary":
+                    return "pink";
+                case "Halifax":
+                    return "white";
+                default: return "white";
+            }
+        }
+        return "white";
+    }
 
 }

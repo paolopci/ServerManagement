@@ -1,0 +1,5 @@
+﻿ul {
+  list-style: none;    /* rimuove il bullet */
+  margin: 0;            /* azzera il margine esterno */
+  padding: 0;           /* azzera il padding interno */
+}
