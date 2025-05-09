@@ -11,13 +11,23 @@
         &nbsp;
         @if (Server.IsOnline)
         {
-             <button class="btn btn-outline-danger" @onclick="@(() => { Server.IsOnline = false;})">Turn Off</button>
+            <button class="btn btn-outline-danger" @onclick="@(() => { Server.IsOnline = false;})">Turn Off</button>
         }
         else
         {
             <button class="btn btn-outline-success" @onclick="@(() => { Server.IsOnline = true;})">Turn On</button>
         }
-       
+        &nbsp;
+        @if (Server.IsOnline)
+        {
+            Random random = new Random();
+            int randomNumber = random.Next(1, 500); 
+            <text>users: @randomNumber</text>
+        }
+        else
+        {
+              <text>N/A</text>
+        }
         &nbsp;
         <a href="/Servers/@Server.ServerId" class="btn btn-link">Edit</a>
         &nbsp;
