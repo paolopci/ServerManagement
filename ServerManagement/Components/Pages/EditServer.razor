@@ -18,7 +18,7 @@
             <div class="col-2">
                 <label class="col-form-label">Name</label>
             </div>
-            <div class="col-6">
+            <div class="col-6 input-width">
                 <InputText @bind-Value="server.Name" class="form-control"></InputText>
             </div>   
             <div class="col">
@@ -31,7 +31,7 @@
                 <label class="col-form-label">City</label>
             </div>
             <div class="col-6">
-                <InputText @bind-Value="server.City" class="form-control"></InputText>
+                <InputText @bind-Value="server.City" class="form-control input-width"></InputText>
             </div>
             <div class="col">
                 <ValidationMessage For="() => server.City"></ValidationMessage>
