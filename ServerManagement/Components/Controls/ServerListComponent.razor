@@ -1,4 +1,4 @@
-﻿@if (servers != null && servers.Count >= 0)
+﻿@* @if (servers != null && servers.Count >= 0)
 {
     <ul>
 
@@ -6,7 +6,15 @@
             <ServerComponent Server="server"></ServerComponent>
         </Virtualize>
     </ul>
-}
+} *@
+<ul class="list-unstyled">
+    <RepeaterComponent Items="servers">
+        <Row Context="server">
+            <ServerComponent Server="server"></ServerComponent>
+        </Row>
+    </RepeaterComponent>
+</ul>
+
 
 
 @code {
@@ -30,7 +38,7 @@
         {
             servers = ServersRepository.SearchServers(SearchFilter);
         }
-        
+
     }
 
 }
