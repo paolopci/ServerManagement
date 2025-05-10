@@ -1,4 +1,111 @@
 ﻿@page "/quickgrid"
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Threading.Tasks
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h3>QuickGrid Demo con Selettore Items per Pagina</h3>
+
+<!-- Selettore Items per pagina sopra la griglia -->
+<div class="mb-2">
+    <label>
+        Items per pagina:&nbsp;
+        <select class="form-select d-inline-block w-auto"
+                @bind="paginationState.ItemsPerPage"
+                @bind:event="oninput"
+                @onchange="OnPageSizeChanged">
+            @foreach (var size in pageSizeOptions)
+            {
+                <option value="@size">@size</option>
+            }
+        </select>
+    </label>
+</div>
+
+@if (servers != null)
+{
+    <!-- Griglia principale -->
+    <QuickGrid Items="servers.AsQueryable()" Pagination="paginationState">
+        <PropertyColumn Property="s => s.Name" Title="Name" />
+        <PropertyColumn Property="s => s.City" Sortable="true" Title="City" />
+        <TemplateColumn Title="Status" Sortable="true" SortBy="GridSort<Server>.ByAscending(s => s.IsOnline)">
+            @if (context.IsOnline)
+            {
+                <div style="color: green">Online</div>
+            }
+            else
+            {
+                <div style="color: red">Offline</div>
+            }
+        </TemplateColumn>
+        <TemplateColumn Title="People Online">
+            @if (context.IsOnline)
+            {
+                <text>users: @(new Random().Next(0, 500))</text>
+            }
+            else
+            {
+                <text>N/A</text>
+            }
+        </TemplateColumn>
+        <TemplateColumn>
+            @if (context.IsOnline)
+            {
+                <button type="button" class="btn btn-outline-danger" @onclick="() => ToggleOnline(context, false)">Turn Off</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-success" @onclick="() => ToggleOnline(context, true)">Turn On</button>
+            }
+        </TemplateColumn>
+        <TemplateColumn>
+            <a href="/servers/@context.ServerId" class="btn btn-outline-primary">Edit</a>
+        </TemplateColumn>
+        <TemplateColumn>
+            <ChildContent Context="server">
+                <EditForm Model="server" OnValidSubmit="() => DeleteServer(server.ServerId)">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </EditForm>
+            </ChildContent>
+        </TemplateColumn>
+    </QuickGrid>
+
+    <!-- Paginatore sotto la griglia -->
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <Paginator State="paginationState" />
+    </div>
+}
+
+@code {
+    private List<Server>? servers = ServersRepository.GetServres();
+    private readonly int[] pageSizeOptions = { 5, 10, 25, 50 };
+    private PaginationState paginationState = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task OnPageSizeChanged(ChangeEventArgs args)
+    {
+        // Torna alla prima pagina
+        await paginationState.SetCurrentPageIndexAsync(0);
+    }
+
+    private void ToggleOnline(Server server, bool isOnline)
+    {
+        server.IsOnline = isOnline;
+    }
+
+    private void DeleteServer(int serverId)
+    {
+        if (serverId > 0)
+        {
+            ServersRepository.DeleteServer(serverId);
+            NavigationManager.NavigateTo("/quickgrid", true);
+        }
+    }
+}
+
+
+
+
+@* @page "/quickgrid"
 
 
 @inject NavigationManager NavigationManager
@@ -62,7 +169,7 @@
                     <button type="submit" class="btn btn-primary">Delete</button>
                 </EditForm>
             </ChildContent>
-            
+
         </TemplateColumn>
     </QuickGrid>
     <Paginator State="paginationState"></Paginator>
@@ -76,19 +183,20 @@
     private PaginationState paginationState = new PaginationState
         {
             ItemsPerPage = 5
-          //  PageSize = 5,
-          //  PageIndex = 0
+        //  PageSize = 5,
+        //  PageIndex = 0
         };
 
     private void DeleteServer(int serverId)
-{
-    if (serverId > 0)
     {
-        ServersRepository.DeleteServer(serverId);
-        // forzo il re-load ... solo per ora
-        NavigationManager.NavigateTo("/quickgrid", true);
+        if (serverId > 0)
+        {
+            ServersRepository.DeleteServer(serverId);
+            // forzo il re-load ... solo per ora
+            NavigationManager.NavigateTo("/quickgrid", true);
 
+        }
     }
 }
-}
 
+ *@
