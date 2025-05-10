@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 <ul class="list-unstyled">
     <RepeaterComponent Items="servers">
         <Row Context="server">
@@ -7,6 +7,27 @@
     </RepeaterComponent>
 </ul>
 
+ *@
+
+<table class="table table-striped">
+    <RepeaterComponent Items="servers">
+        <Header>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Status</th>
+                <th>People Online</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        </Header>
+        <Row Context="server">
+            <ServerComponent Server="server"></ServerComponent>
+        </Row>
+    </RepeaterComponent>
+</table>
 
 
 @code {
