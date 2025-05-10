@@ -1,12 +1,4 @@
-﻿@* @if (servers != null && servers.Count >= 0)
-{
-    <ul>
-
-        <Virtualize Items="this.servers" Context="server">
-            <ServerComponent Server="server"></ServerComponent>
-        </Virtualize>
-    </ul>
-} *@
+﻿
 <ul class="list-unstyled">
     <RepeaterComponent Items="servers">
         <Row Context="server">
