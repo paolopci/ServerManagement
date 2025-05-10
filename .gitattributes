@@ -61,3 +61,10 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+
+# Forza LF nei file Razor (cross‐platform)
+*.razor text eol=lf
+
+# Oppure: forza conversione automatica per tutti i file di testo
+* text=auto
