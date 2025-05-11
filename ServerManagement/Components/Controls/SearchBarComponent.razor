@@ -1,7 +1,7 @@
 ﻿
 
 
-<div class="input-group mb-3 input-width">
+<div class="input-group mb-3 input-width" @attributes="OtherAttributes">
     <input type="text" class="form-control" placeholder="Search Servers"
            @bind-value="serverFilter"
            @bind-value:event="oninput" />
@@ -12,6 +12,17 @@
 
     [Parameter]
     public EventCallback<string> SearchServerCallback { get; set; }
+    /*
+     *L’attributo [Parameter(CaptureUnmatchedValues = true)] in un componente Blazor
+     * serve a “catturare” tutti gli attributi HTML passati al componente che non
+     * corrispondono ad alcuna proprietà marcata con [Parameter] esplicitamente.
+     * In pratica, permette di raccogliere in un dizionario tutte le coppie chiave-valore
+     * aggiuntive (es. class, style, data-*, ecc.) e di “spalmarle”
+     * (attribute splatting) sugli elementi interni al componente.
+     */
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? OtherAttributes { get; set; }
 
     private string serverFilter = "";
 
