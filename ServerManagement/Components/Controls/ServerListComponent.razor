@@ -98,13 +98,6 @@
             }
 
             StateHasChanged();
-
-            Timer = new System.Threading.Timer(_ =>
-            {
-                base.InvokeAsync(StateHasChanged);
-            }, null, 2000, 2000);
         }
-
-
     }
 }
