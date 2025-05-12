@@ -1,4 +1,4 @@
-﻿@page "/weather"
+﻿@page "/weather/{name?}"
 @attribute [StreamRendering]
 
 <PageTitle>Weather</PageTitle>
@@ -38,6 +38,9 @@ else
 
 @code {
     private WeatherForecast[]? forecasts;
+
+    [Parameter]
+    public string Name { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
