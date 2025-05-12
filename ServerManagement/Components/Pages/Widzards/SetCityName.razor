@@ -1,0 +1,58 @@
+﻿@page "/cityname"
+
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<h3>City Name</h3>
+<br />
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+
+@if (server is not null)
+{
+    <FieldComponent Label="City Name">
+        <Control>
+            <input type="text" @bind-value="server.City" class="form-control" />
+        </Control>
+    </FieldComponent>
+    <br />
+    <button class="btn btn-primary" @onclick="GoNext">Next</button>
+}
+
+@code {
+    private Server? server;
+    private string? errorMessage;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+    private void GoNext()
+    {
+        if (server is not null)
+        {
+            if (string.IsNullOrWhiteSpace(server.City))
+            {
+                this.errorMessage = "City Name is required.";
+            }
+            else
+            {
+                //   containerStorage.SetServer(server);
+                NavigationManager.NavigateTo("/serverstatus");
+            }
+        }
+    }
+
+}
