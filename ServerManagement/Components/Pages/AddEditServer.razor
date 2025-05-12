@@ -1,0 +1,45 @@
+﻿@page "/server/{id:int?}"
+
+@inject NavigationManager NavigationManager
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Server? server { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (Id.HasValue)
+        {
+            //
+        }
+        else
+        {
+            server ??= new Server() { IsOnline = false };
+        }
+    }
+
+
+    private void Submit()
+    {
+        if (server != null)
+        {
+            if (Id.HasValue)
+            {
+                //
+            }
+            else
+            {
+                //
+            }
+        }
+        NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
+    }
+}
