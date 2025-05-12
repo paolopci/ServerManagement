@@ -101,8 +101,8 @@
 
             Timer = new System.Threading.Timer(_ =>
             {
-                StateHasChanged();
-            },null,2000,2000);
+                base.InvokeAsync(StateHasChanged);
+            }, null, 2000, 2000);
         }
 
 
