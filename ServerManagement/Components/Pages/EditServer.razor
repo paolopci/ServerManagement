@@ -54,6 +54,7 @@
     [Parameter]
     public int Id { get; set; }
 
+
     [SupplyParameterFromForm]
     private Server? server { get; set; }
 
@@ -69,7 +70,7 @@
             ServersRepository.UpdateServer(server.ServerId, server);
         }
 
-        NavigationManager.NavigateTo("/servers");
+        NavigationManager.NavigateTo($"/servers/back_from/{server.City}");
 
     }
 
