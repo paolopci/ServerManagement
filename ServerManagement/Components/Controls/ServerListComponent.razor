@@ -2,36 +2,32 @@
 <table class="table table-striped">
     <RepeaterComponent Items="servers">
         <Header>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>City</th>
-                    <th>Status</th>
-                    <th>People Online</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Status</th>
+                <th>People Online</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
         </Header>
         <Row Context="server">
             <ServerComponent Server="server"></ServerComponent>
         </Row>
     </RepeaterComponent>
 </table>
-
-
+@*< br/>
+<button class="btn btn-primary" @onclick="@(()=>{})">Refresh</button> *@
 @code {
-
     [Parameter]
     public string? CityName { get; set; }
-
     [Parameter]
     public string? SearchFilter { get; set; }
 
-
+    private System.Threading.Timer? Timer;
     private List<Server>? servers;
-
-
     public override Task SetParametersAsync(ParameterView parameters)
     {
         var guid = Guid.NewGuid();
@@ -43,7 +39,6 @@
                 base.SetParametersAsync(parameters);
             }
         }
-
         if (parameters.TryGetValue<string>("SearchFilter", out var searchFilter))
         {
             if (searchFilter != SearchFilter)
@@ -51,15 +46,12 @@
                 base.SetParametersAsync(parameters);
             }
         }
-
         return Task.CompletedTask;
     }
-
     protected override void OnParametersSet()
     {
         var guid = Guid.NewGuid();
         Console.WriteLine($"{this.GetType().Name}: {nameof(OnParametersSet)} : {guid}");
-
         if (string.IsNullOrEmpty(SearchFilter))
         {
             servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
@@ -73,7 +65,6 @@
     {
         var guid = Guid.NewGuid();
         Console.WriteLine($"{this.GetType().Name}: {nameof(OnInitialized)} : {guid}");
-
         if (string.IsNullOrWhiteSpace(SearchFilter))
         {
             servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
@@ -83,23 +74,37 @@
             servers = ServersRepository.SearchServers(SearchFilter);
         }
     }
-
     protected override bool ShouldRender()
     {
         var guid = Guid.NewGuid();
         Console.WriteLine($"{this.GetType().Name}: {nameof(ShouldRender)} : {guid}");
-
         return base.ShouldRender();
-
     }
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-
         var guid = Guid.NewGuid();
         Console.WriteLine($"{this.GetType().Name}: {nameof(OnAfterRender)} : {guid}");
+
+        if (firstRender)
+        {
+            if (string.IsNullOrWhiteSpace(SearchFilter))
+            {
+                servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+            }
+            else
+            {
+                servers = ServersRepository.SearchServers(SearchFilter);
+            }
+
+            StateHasChanged();
+
+            Timer = new System.Threading.Timer(_ =>
+            {
+                StateHasChanged();
+            },null,2000,2000);
+        }
+
+
     }
-
-   
-
 }
