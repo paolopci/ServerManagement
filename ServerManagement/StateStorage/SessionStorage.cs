@@ -6,15 +6,15 @@ namespace ServerManagement.StateStorage
 {
     public class SessionStorage
     {
-        private readonly ProtectedSessionStorage protectedSessionStorage;
+        private readonly ProtectedSessionStorage _protectedSessionStorage;
         public SessionStorage(ProtectedSessionStorage protectedSessionStorage)
         {
-            this.protectedSessionStorage = protectedSessionStorage;
+            this._protectedSessionStorage = protectedSessionStorage;
         }
 
         public async Task<Server?> GetServerAsync()
         {
-            var result = await protectedSessionStorage.GetAsync<Server>("server");
+            var result = await _protectedSessionStorage.GetAsync<Server>("server");
             if (result.Success)
             {
                 return result.Value;
@@ -24,7 +24,22 @@ namespace ServerManagement.StateStorage
 
         public async Task SetServerAsync(Server? server)
         {
-            await protectedSessionStorage.SetAsync("server", server);
+            await _protectedSessionStorage.SetAsync("server", server);
         }
+
+        //public async Task<Server?> GetCityAsync()
+        //{
+        //    var result = await _protectedSessionStorage.GetAsync<Server>("city");
+        //    if (result.Success)
+        //    {
+        //        return result.Value;
+        //    }
+        //    return null;
+        //}
+
+        //public async Task SetCityAsync(string? cityName)
+        //{
+        //    await _protectedSessionStorage.SetAsync("city", cityName);
+        //}
     }
 }
