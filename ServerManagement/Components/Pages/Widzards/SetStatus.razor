@@ -14,31 +14,22 @@
     </div>
 }
 
-@if (server is not null)
-{
-    <FieldComponent Label="Server Status">
-        <Control>
-            @if (server.IsOnline)
-            {
-                <input type="checkbox"
-                       @bind-value="server.IsOnline"
-                       checked class="form-check-input"></input>
-            }
-            else
-            {
-                <input type="checkbox"
-                       @bind-value="server.IsOnline"
-                       class="form-check-input"></input>
-            }
 
-        </Control>
-    </FieldComponent>
-    <br />
-    <button type="button" class="btn btn-primary" @onclick="Save">Save</button>
-}
+<FieldComponent Label="Server Status">
+    <Control>
+        <input type="checkbox" @bind-value="isOnline"  class="form-check-input"/>
+    </Control>
+</FieldComponent>
+<br />
+<button type="button" class="btn btn-primary" @onclick="Save">Save</button>
+
 
 @code {
-    private Server? server;
+    [SupplyParameterFromQuery]
+    public string? CityName { get; set; }
+    [SupplyParameterFromQuery]
+    public string? ServerName { get; set; }
+    private bool isOnline;
 
     private string? errorMessage;
 
@@ -46,15 +37,43 @@
     {
         if (firstRender)
         {
-            StateHasChanged();
+            if (string.IsNullOrWhiteSpace(ServerName))
+            {
+                errorMessage = "Server Name is required.";
+                StateHasChanged();
+            }
+            else if (string.IsNullOrWhiteSpace(CityName))
+            {
+                errorMessage = "City Name is required.";
+                StateHasChanged();
+            }
         }
     }
 
     private void Save()
-    {
-        if (server is not null)
         {
-            NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
+
+        if (string.IsNullOrWhiteSpace(ServerName))
+        {
+            errorMessage = "Server Name is required.";
+            return;
         }
+        else if (string.IsNullOrWhiteSpace(CityName))
+        {
+            errorMessage = "City Name is required.";
+            return;
+        }
+
+
+        var server = new Server
+            {
+                Name = ServerName,
+                City = CityName,
+                IsOnline = isOnline
+            };
+
+
+        ServersRepository.AddServer(server);
+        NavigationManager.NavigateTo($"/servers/back_from/{CityName}");
     }
 }
