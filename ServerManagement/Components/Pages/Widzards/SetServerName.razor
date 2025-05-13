@@ -1,12 +1,12 @@
 ﻿@page "/servername"
+@using ServerManagement.StateStorage
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-
+@inject SessionStorage sessionStorage
 
 <h3>Server Name</h3>
 <br />
-
 
 
 
@@ -20,7 +20,7 @@
 
 <FieldComponent Label="Name">
     <Control>
-        <input type="text" @bind-value="serverName" class="form-control" />
+        <input type="text" @bind-value="server.Name" class="form-control" />
     </Control>
 </FieldComponent>
 <br />
@@ -32,24 +32,29 @@
 
 @code {
     private string? errorMessage;
-    private string? serverName;
+    //private string? serverName;
+
+    private Server? server;
 
     protected override void OnInitialized()
     {
+        server = new Server();
         base.OnInitialized();
     }
 
 
-    private void GoNext()
+    private async void GoNext()
     {
 
-        if (string.IsNullOrWhiteSpace(serverName))
+        if (string.IsNullOrWhiteSpace(server.Name))
         {
             this.errorMessage = "Server Name is required.";
         }
         else
         {
-            NavigationManager.NavigateTo($"/cityname?servername={serverName}");
+            await sessionStorage.SetServerAsync(server);
+            // uso sia url che la sessionStorage per esempio.
+            NavigationManager.NavigateTo("/cityname");
         }
 
     }

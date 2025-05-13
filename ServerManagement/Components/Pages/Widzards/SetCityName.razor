@@ -1,4 +1,6 @@
 ﻿@page "/cityname"
+@using ServerManagement.StateStorage
+@inject SessionStorage sessionStorage
 
 
 @rendermode InteractiveServer
@@ -6,9 +8,6 @@
 
 <h3>City Name</h3>
 <br />
-
-
-
 
 
 @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -22,7 +21,7 @@
 
 <FieldComponent Label="City Name">
     <Control>
-        <input type="text" @bind-value="cityName" class="form-control" />
+        <input type="text" @bind-value="server.City" class="form-control" />
     </Control>
 </FieldComponent>
 <br />
@@ -30,45 +29,40 @@
 
 
 @code {
-    private string? cityName;
+    private Server? server;
     private string? errorMessage;
 
-    [SupplyParameterFromQuery]
-    public string? ServerName { get; set; }
 
     protected override void OnInitialized()
     {
+         server = new Server();
         base.OnInitialized();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (string.IsNullOrWhiteSpace(ServerName))
-            {
-                errorMessage = "Server Name is required.";
-                StateHasChanged();
-            }
+            server = await sessionStorage.GetServerAsync();
+            StateHasChanged();
         }
     }
 
-    private void GoNext()
+    private async Task GoNext()
     {
-        if (string.IsNullOrWhiteSpace(ServerName))
+        if (server is not null)
         {
-            errorMessage = "Server Name is required.";
-            StateHasChanged();
+            if (string.IsNullOrWhiteSpace(server.City))
+            {
+                errorMessage = "City Name is required.";
+            }
+            else
+            {
+                // lo reimposto nella memoria
+                await sessionStorage.SetServerAsync(server);
+                NavigationManager.NavigateTo($"/serverstatus");
+            }
         }
-        else if (string.IsNullOrWhiteSpace(cityName))
-        {
-            errorMessage = "City Name is required.";
-        }
-        else
-        {
-            NavigationManager.NavigateTo($"/serverstatus?servername={ServerName}&cityname={cityName}");
-        }
-
     }
 
 }

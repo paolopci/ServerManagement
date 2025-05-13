@@ -1,7 +1,9 @@
 ﻿@page "/serverstatus"
+@using ServerManagement.StateStorage
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@inject SessionStorage sessionStorage
 
 
 
@@ -17,7 +19,7 @@
 
 <FieldComponent Label="Server Status">
     <Control>
-        <input type="checkbox" @bind-value="isOnline"  class="form-check-input"/>
+        <input type="checkbox" @bind-value="server.IsOnline" class="form-check-input" />
     </Control>
 </FieldComponent>
 <br />
@@ -25,55 +27,34 @@
 
 
 @code {
-    [SupplyParameterFromQuery]
-    public string? CityName { get; set; }
-    [SupplyParameterFromQuery]
-    public string? ServerName { get; set; }
+
+    private Server? server;
     private bool isOnline;
 
     private string? errorMessage;
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override void OnInitialized() 
+    {
+     server = new Server();
+     base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (string.IsNullOrWhiteSpace(ServerName))
-            {
-                errorMessage = "Server Name is required.";
-                StateHasChanged();
-            }
-            else if (string.IsNullOrWhiteSpace(CityName))
-            {
-                errorMessage = "City Name is required.";
-                StateHasChanged();
-            }
+            server = await sessionStorage.GetServerAsync();
+            StateHasChanged();
         }
     }
 
-    private void Save()
+    private async Task Save()
+    {
+        if (server is not null)
         {
-
-        if (string.IsNullOrWhiteSpace(ServerName))
-        {
-            errorMessage = "Server Name is required.";
-            return;
+            await sessionStorage.SetServerAsync(null);
+            ServersRepository.AddServer(server);
+            NavigationManager.NavigateTo($"/servers/back_from/{server.City}");
         }
-        else if (string.IsNullOrWhiteSpace(CityName))
-        {
-            errorMessage = "City Name is required.";
-            return;
-        }
-
-
-        var server = new Server
-            {
-                Name = ServerName,
-                City = CityName,
-                IsOnline = isOnline
-            };
-
-
-        ServersRepository.AddServer(server);
-        NavigationManager.NavigateTo($"/servers/back_from/{CityName}");
     }
 }
