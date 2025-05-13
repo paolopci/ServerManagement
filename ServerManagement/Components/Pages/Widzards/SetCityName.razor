@@ -6,6 +6,11 @@
 
 <h3>City Name</h3>
 <br />
+
+
+
+
+
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <div class="alert alert-danger">
@@ -14,20 +19,22 @@
 }
 
 
-@if (server is not null)
-{
-    <FieldComponent Label="City Name">
-        <Control>
-            <input type="text" @bind-value="server.City" class="form-control" />
-        </Control>
-    </FieldComponent>
-    <br />
-    <button class="btn btn-primary" @onclick="GoNext">Next</button>
-}
+
+<FieldComponent Label="City Name">
+    <Control>
+        <input type="text" @bind-value="server.City" class="form-control" />
+    </Control>
+</FieldComponent>
+<br />
+<button class="btn btn-primary" @onclick="GoNext">Next</button>
+
 
 @code {
-    private Server? server;
+    private string? cityName;
     private string? errorMessage;
+
+    [SupplyParameterFromQuery]
+    public string? ServerName { get; set; }
 
     protected override void OnInitialized()
     {
@@ -36,23 +43,32 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            if (string.IsNullOrWhiteSpace(ServerName))
+            {
+                errorMessage = "Server Name is required.";
+                StateHasChanged();
+            }
+        }
     }
 
     private void GoNext()
     {
-        if (server is not null)
+        if (string.IsNullOrWhiteSpace(ServerName))
         {
-            if (string.IsNullOrWhiteSpace(server.City))
-            {
-                this.errorMessage = "City Name is required.";
-            }
-            else
-            {
-                //   containerStorage.SetServer(server);
-                NavigationManager.NavigateTo("/serverstatus");
-            }
+            errorMessage = "Server Name is required.";
+            StateHasChanged();
         }
+        else if (string.IsNullOrWhiteSpace(cityName))
+        {
+            errorMessage = "City Name is required.";
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/serverstatus?servername={ServerName}&cityname={cityName}");
+        }
+
     }
 
 }

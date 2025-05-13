@@ -6,6 +6,10 @@
 
 <h3>Server Name</h3>
 <br />
+
+
+
+
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <div class="alert alert-danger">
@@ -14,14 +18,13 @@
 }
 
 
-
-    <FieldComponent Label="Name">
-        <Control>
-            <input type="text" @bind-value="serverName" class="form-control" />
-        </Control>
-    </FieldComponent>
-    <br />
-    <button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+<FieldComponent Label="Name">
+    <Control>
+        <input type="text" @bind-value="serverName" class="form-control" />
+    </Control>
+</FieldComponent>
+<br />
+<button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
 
 
 
@@ -39,7 +42,7 @@
 
     private void GoNext()
     {
-        
+
         if (string.IsNullOrWhiteSpace(serverName))
         {
             this.errorMessage = "Server Name is required.";
@@ -48,6 +51,6 @@
         {
             NavigationManager.NavigateTo($"/cityname?servername={serverName}");
         }
-      
+
     }
 }
