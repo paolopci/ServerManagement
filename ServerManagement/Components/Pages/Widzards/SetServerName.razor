@@ -3,7 +3,7 @@
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@inject SessionStorage sessionStorage
+@inject ContainerStorage containerStorage
 
 <h3>Server Name</h3>
 <br />
@@ -18,13 +18,16 @@
 }
 
 
-<FieldComponent Label="Name">
-    <Control>
-        <input type="text" @bind-value="server.Name" class="form-control" />
-    </Control>
-</FieldComponent>
-<br />
-<button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+@if (server is not null)
+{
+    <FieldComponent Label="Name">
+        <Control>
+            <input type="text" @bind-value="server.Name" class="form-control"></input>
+        </Control>
+    </FieldComponent>
+    <br />
+    <button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+}
 
 
 
@@ -32,18 +35,23 @@
 
 @code {
     private string? errorMessage;
-    //private string? serverName;
 
     private Server? server;
 
     protected override void OnInitialized()
     {
-        server = new Server();
         base.OnInitialized();
     }
 
-
-    private async void GoNext()
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            server = new Server();
+            StateHasChanged();
+        }
+    }
+    private void GoNext()
     {
 
         if (string.IsNullOrWhiteSpace(server.Name))
@@ -52,8 +60,8 @@
         }
         else
         {
-            await sessionStorage.SetServerAsync(server);
-            // uso sia url che la sessionStorage per esempio.
+            containerStorage.SetServer(server);
+            // uso sia url che la containerStorage per esempio.
             NavigationManager.NavigateTo("/cityname");
         }
 

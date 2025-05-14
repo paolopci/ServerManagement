@@ -1,6 +1,5 @@
 ﻿@page "/cityname"
-@using ServerManagement.StateStorage
-@inject SessionStorage sessionStorage
+@inject ContainerStorage containerStorage
 
 
 @rendermode InteractiveServer
@@ -19,13 +18,18 @@
 
 
 
-<FieldComponent Label="City Name">
-    <Control>
-        <input type="text" @bind-value="server.City" class="form-control" />
-    </Control>
-</FieldComponent>
-<br />
-<button class="btn btn-primary" @onclick="GoNext">Next</button>
+@if (server is not null)
+{
+    <FieldComponent Label="City Name">
+        <Control>
+            <input type="text" @bind-value="server.City" class="form-control" />
+        </Control>
+    </FieldComponent>
+    <br />
+    <button class="btn btn-primary" @onclick="GoNext">Next</button>
+}
+
+
 
 
 @code {
@@ -35,20 +39,19 @@
 
     protected override void OnInitialized()
     {
-         server = new Server();
         base.OnInitialized();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            server = await sessionStorage.GetServerAsync();
+            server = containerStorage.GetServer();
             StateHasChanged();
         }
     }
 
-    private async Task GoNext()
+    private void GoNext()
     {
         if (server is not null)
         {
@@ -59,7 +62,7 @@
             else
             {
                 // lo reimposto nella memoria
-                await sessionStorage.SetServerAsync(server);
+                containerStorage.SetServer(server);
                 NavigationManager.NavigateTo($"/serverstatus");
             }
         }

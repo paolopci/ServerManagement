@@ -3,7 +3,7 @@
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@inject SessionStorage sessionStorage
+@inject ContainerStorage containerStorage
 
 
 
@@ -33,26 +33,26 @@
 
     private string? errorMessage;
 
-    protected override void OnInitialized() 
+    protected override void OnInitialized()
     {
-     server = new Server();
-     base.OnInitialized();
+        server = new Server();
+        base.OnInitialized();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            server = await sessionStorage.GetServerAsync();
+            server = containerStorage.GetServer();
             StateHasChanged();
         }
     }
 
-    private async Task Save()
+    private void Save()
     {
         if (server is not null)
         {
-            await sessionStorage.SetServerAsync(null);
+            containerStorage.SetServer(null);
             ServersRepository.AddServer(server);
             NavigationManager.NavigateTo($"/servers/back_from/{server.City}");
         }
