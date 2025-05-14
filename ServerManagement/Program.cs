@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddTransient<SessionStorage>();
+builder.Services.AddScoped<ContainerStorage>();
 
 builder.Services.AddCascadingValue("SelectedCity", sp => "Toronto");
 
