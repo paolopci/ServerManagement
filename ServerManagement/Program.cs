@@ -1,10 +1,14 @@
 using ServerManagement.Components;
+using ServerManagement.StateStorage;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddTransient<SessionStorage>();
+builder.Services.AddScoped<ContainerStorage>();
 
 builder.Services.AddCascadingValue("SelectedCity", sp => "Toronto");
 
