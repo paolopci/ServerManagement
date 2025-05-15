@@ -1,4 +1,4 @@
-﻿
+﻿@inject IServersEFCoreRepository ServersEfCoreRepository
 <table class="table table-striped">
     <RepeaterComponent Items="servers">
         <Header>
@@ -54,11 +54,11 @@
         Console.WriteLine($"{this.GetType().Name}: {nameof(OnParametersSet)} : {guid}");
         if (string.IsNullOrEmpty(SearchFilter))
         {
-            servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+            servers = ServersEfCoreRepository.GetServersByCity(CityName ?? "Toronto");
         }
         else
         {
-            servers = ServersRepository.SearchServers(SearchFilter);
+            servers = ServersEfCoreRepository.SearchServers(SearchFilter);
         }
     }
     protected override void OnInitialized()
@@ -67,11 +67,11 @@
         Console.WriteLine($"{this.GetType().Name}: {nameof(OnInitialized)} : {guid}");
         if (string.IsNullOrWhiteSpace(SearchFilter))
         {
-            servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+            servers = ServersEfCoreRepository.GetServersByCity(CityName ?? "Toronto");
         }
         else
         {
-            servers = ServersRepository.SearchServers(SearchFilter);
+            servers = ServersEfCoreRepository.SearchServers(SearchFilter);
         }
     }
     protected override bool ShouldRender()
@@ -90,11 +90,11 @@
         {
             if (string.IsNullOrWhiteSpace(SearchFilter))
             {
-                servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+                servers = ServersEfCoreRepository.GetServersByCity(CityName ?? "Toronto");
             }
             else
             {
-                servers = ServersRepository.SearchServers(SearchFilter);
+                servers = ServersEfCoreRepository.SearchServers(SearchFilter);
             }
 
             StateHasChanged();

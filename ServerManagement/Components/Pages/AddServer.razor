@@ -1,4 +1,5 @@
 ﻿@page "/servers/add"
+@inject IServersEFCoreRepository ServersEfCoreRepository
 
 @inject NavigationManager NavigationManager
 
@@ -50,7 +51,7 @@
     {
         if (server != null)
         {
-            ServersRepository.AddServer(server);
+            ServersEfCoreRepository.AddServer(server);
            NavigationManager.NavigateTo($"/servers/back_from/{server.City}");
         }
     }

@@ -1,4 +1,6 @@
 ﻿@page "/quickgrid"
+
+@inject IServersEFCoreRepository ServersEfCoreRepository
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using System.Threading.Tasks
 @inject NavigationManager NavigationManager
@@ -77,9 +79,23 @@
 }
 
 @code {
-    private List<Server>? servers = ServersRepository.GetServres();
+    private List<Server>? servers;
     private readonly int[] pageSizeOptions = { 5, 10, 25, 50 };
     private PaginationState paginationState = new PaginationState { ItemsPerPage = 5 };
+
+    // protected override void OnInitialized()
+    // {
+    //     servers = ServersEfCoreRepository.GetAllServers();
+    // }
+
+    protected override void OnAfterRender(bool firstRender)
+    { 
+        if (firstRender)
+        {
+            servers = ServersEfCoreRepository.GetAllServers(); 
+        }
+
+    }
 
     private async Task OnPageSizeChanged(ChangeEventArgs args)
     {
@@ -96,7 +112,7 @@
     {
         if (serverId > 0)
         {
-            ServersRepository.DeleteServer(serverId);
+            ServersEfCoreRepository.DeleteServer(serverId);
             NavigationManager.NavigateTo("/quickgrid", true);
         }
     }
