@@ -2,6 +2,7 @@
 {
     public interface IServersEFCoreRepository
     {
+        List<Server> GetServersByCity(string city);
         void AddServer(Server server);
 
         List<Server> GetAllServers();

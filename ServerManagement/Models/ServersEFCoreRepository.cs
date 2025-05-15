@@ -50,6 +50,21 @@ namespace ServerManagement.Models
             };
         }
 
+        public List<Server> GetServersByCity(string city)
+        {
+            using var db = _contextFactory.CreateDbContext();
+            return db.Servers
+                .Where(s => s.City == city)
+                .Select(s => new Server
+                {
+                    ServerId = s.ServerId,
+                    Name = s.Name,
+                    City = s.City,
+                    IsOnline = s.IsOnline
+                })
+                .ToList();
+        }
+
         public void UpdateServer(int serverId, Server server)
         {
             if (serverId != server.ServerId)
