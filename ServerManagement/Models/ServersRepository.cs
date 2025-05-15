@@ -18,7 +18,7 @@
             new Server {  ServerId = 12, Name = "Server12", City = "Halifax" },
             new Server {  ServerId = 13, Name = "Server13", City = "Halifax" },
             new Server {  ServerId = 14, Name = "Server14", City = "Halifax" },
-            new Server {  ServerId = 15, Name = "Server15", City = "Halifax" },
+            new Server {  ServerId = 15, Name = "Server15", City = "Halifax" }
         };
 
         public static void AddServer(Server server)
