@@ -1,42 +1,10 @@
 ﻿@inject NavigationManager NavigationManager
+@inject IServersEFCoreRepository ServersEfCoreRepository
 
 
 @if (Server != null)
 {
-    @* <li @key="Server.ServerId" style="background-color: @GetBackgroundColor()">
-        @Server.Name in @Server.City is
-        <span style="color:@((Server.IsOnline ? "green" : "red"))">
-            @(Server.IsOnline ? "online" : "offline")
-        </span>
-        &nbsp;
-        @if (Server.IsOnline)
-        {
-            <button class="btn btn-outline-danger" @onclick="@(() => { Server.IsOnline = false;})">Turn Off</button>
-        }
-        else
-        {
-            <button class="btn btn-outline-success" @onclick="@(() => { Server.IsOnline = true;})">Turn On</button>
-        }
-        &nbsp;
-        @if (Server.IsOnline)
-        {
-            Random random = new Random();
-            int randomNumber = random.Next(1, 500);
-            <text>users: @randomNumber</text>
-        }
-        else
-        {
-            <text>N/A</text>
-        }
-        &nbsp;
-        <a href="/Servers/@Server.ServerId" class="btn btn-link">Edit</a>
-        &nbsp;
-        <EditForm Model="Server"
-                  FormName="@($"form-Server-{Server.ServerId}")"
-                  OnValidSubmit="@(() => { DeleteServer(Server.ServerId); })">
-            <button type="submit" class="btn btn-primary">Delete</button>
-        </EditForm>
-    </li> *@
+
     <tr style="background-color: @GetBackgroundColor()">
         <td>
             @Server.Name
@@ -62,15 +30,17 @@
         <td>
             @if (Server.IsOnline)
             {
-                <button type="button" class="btn btn-outline-danger" @onclick="@(() => { Server.IsOnline = false;})">
+
+                <button type="button" class="btn btn-outline-danger" @onclick="@(async () => await SetServerStatus(false))">
                     Turn Off
-                </button> 
+                </button>
             }
             else
             {
-                <button type="button" class="btn btn-outline-success" @onclick="@(()=> {Server.IsOnline = true;})">
+                <button type="button" class="btn btn-outline-success" @onclick="@(async () => await SetServerStatus(true))">
                     Turn On
                 </button>
+
             }
             &nbsp;
             <a href="/servers/@Server.ServerId" class="btn btn-outline-primary">Edit</a>
@@ -89,8 +59,6 @@
     [CascadingParameter(Name = "SelectedCity")]
     public string? SelectedCity { get; set; }
 
-
-
     [Parameter]
     public Server? Server { get; set; }
 
@@ -99,7 +67,7 @@
     {
         if (serverId > 0)
         {
-            ServersRepository.DeleteServer(serverId);
+            ServersEfCoreRepository.DeleteServer(serverId);
             // forzo il re-load ... solo per ora
             NavigationManager.NavigateTo("/servers", true);
 
@@ -129,9 +97,15 @@
         return "white";
     }
 
-    private void SetServerStatus(bool p0)
+
+    private async Task SetServerStatus(bool status)
     {
-        throw new NotImplementedException();
+        if (Server is not null && Server.IsOnline != status)
+        {
+            Server.IsOnline = status;
+            ServersEfCoreRepository.UpdateServer(Server.ServerId, Server);
+            StateHasChanged();
+        }
     }
 
 }

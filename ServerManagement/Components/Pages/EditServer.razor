@@ -1,5 +1,5 @@
 ﻿@page "/servers/{id:int}"
-
+@inject IServersEFCoreRepository ServersEfCoreRepository
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
@@ -60,14 +60,14 @@
 
     protected override void OnParametersSet()
     {
-        server ??= ServersRepository.GetServerById(this.Id);
+        server ??= ServersEfCoreRepository.GetServerById(this.Id);
     }
 
     private void Submit()
     {
         if (server != null)
         {
-            ServersRepository.UpdateServer(server.ServerId, server);
+            ServersEfCoreRepository.UpdateServer(server.ServerId, server);
         }
 
         NavigationManager.NavigateTo($"/servers/back_from/{server.City}");
