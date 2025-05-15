@@ -93,5 +93,4 @@ namespace ServerManagement.Models
             db.SaveChanges();
         }
     }
-
 }
