@@ -54,7 +54,7 @@ namespace ServerManagement.Models
         {
             using var db = _contextFactory.CreateDbContext();
             return db.Servers
-                .Where(s => s.City == city)
+                .Where(s => s.City != null && s.City.ToLower().Contains(city.ToLower()))
                 .Select(s => new Server
                 {
                     ServerId = s.ServerId,
@@ -67,8 +67,14 @@ namespace ServerManagement.Models
 
         public void UpdateServer(int serverId, Server server)
         {
+            if (server == null)
+            {
+                throw new ArgumentNullException(nameof(server));
+            }
+
             if (serverId != server.ServerId)
                 return;
+
 
             using var db = _contextFactory.CreateDbContext();
             var existing = db.Servers.FirstOrDefault(s => s.ServerId == serverId);
@@ -91,6 +97,21 @@ namespace ServerManagement.Models
 
             db.Servers.Remove(toDelete);
             db.SaveChanges();
+        }
+
+        public List<Server> SearchServers(string serverFilter)
+        {
+            using var db = _contextFactory.CreateDbContext();
+            return db.Servers
+                .Where(s => s.Name != null && s.Name.ToLower().Contains(serverFilter.ToLower()))
+                .Select(s => new Server
+                {
+                    ServerId = s.ServerId,
+                    Name = s.Name,
+                    City = s.City,
+                    IsOnline = s.IsOnline
+                })
+                .ToList();
         }
     }
 }
