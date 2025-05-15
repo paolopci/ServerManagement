@@ -4,6 +4,7 @@
 @rendermode InteractiveWebAssembly
 @inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
+@inject ContainerStorage ContainerStorage
 
 
 <br />
@@ -15,18 +16,20 @@
 @code {
     private string data = string.Empty;
 
-   
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             // Qui JSRuntime è finalmente pronto sul client
-            data = await JsRuntime.InvokeAsync<string>("sessionStorage.getItem", "demo-data");
+            // data = await JsRuntime.InvokeAsync<string>("sessionStorage.getItem", "demo-data");
+
+
+            // uso DI per mantenere gli stati
+            data = ContainerStorage.GetMessage();
+
 
             // Se serve ridisegnare con i nuovi dati
             StateHasChanged();
-         //   _initialized = true;
         }
     }
 

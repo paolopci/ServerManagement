@@ -4,6 +4,7 @@
 
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject ContainerStorage ContainerStorage
 
 
 
@@ -21,7 +22,12 @@
 
     private async Task GoNext()
     {
-        await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "demo-data", data);
+       // await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "demo-data", data);
+       
+       
+       
+       // uso DI per mantenere gli stati
+       ContainerStorage.SetMessage(data);
         
         NavigationManager.NavigateTo("/browser_wasm_2");
     }
